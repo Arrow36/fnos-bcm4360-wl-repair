@@ -1,0 +1,42 @@
+#!/bin/bash
+set -Eeuo pipefail
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+APP_DIR="${TRIM_APPDEST:-$(cd "$(dirname "$0")/.." && pwd)}"
+INSTALLER="${APP_DIR}/bin/fnos-bcm4360-oneclick.sh"
+DRIVER_PACKAGE="${APP_DIR}/packages/broadcom-sta-dkms_6.30.223.271-30_amd64.deb"
+SERVICE_NAME="fnos-bcm4360-wl.service"
+SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}"
+PERSISTENT_INSTALLER="/usr/local/sbin/fnos-bcm4360-wl"
+
+case "${1:-status}" in
+    start)
+        if [[ ! -f "$SERVICE_FILE" ||
+              ! -x "$PERSISTENT_INSTALLER" ]] ||
+           ! systemctl is-enabled --quiet "$SERVICE_NAME" 2>/dev/null; then
+            # 若系统升级清理了系统盘上的服务文件，利用仍保存在应用卷中的
+            # 离线包恢复完整安装，实现应用层 + systemd 层双重自愈。
+            /bin/bash "$INSTALLER" install --deb "$DRIVER_PACKAGE"
+        else
+            /bin/bash "$INSTALLER" repair
+        fi
+        ;;
+    stop)
+        # “停止应用”不卸载当前驱动，也不关闭自愈服务，避免网络意外中断。
+        exit 0
+        ;;
+    restart)
+        "$0" start
+        ;;
+    status)
+        if modinfo -k "$(uname -r)" wl >/dev/null 2>&1 &&
+           systemctl is-enabled --quiet "$SERVICE_NAME" 2>/dev/null; then
+            exit 0
+        fi
+        exit 3
+        ;;
+    *)
+        printf 'Usage: %s {start|stop|restart|status}\n' "$0" >&2
+        exit 2
+        ;;
+esac

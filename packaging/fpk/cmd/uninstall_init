@@ -1,0 +1,19 @@
+#!/bin/bash
+set -Eeuo pipefail
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# 卸载应用时只移除自动维护入口；保留当前已编译驱动、配置和离线缓存，
+# 防止正在使用 Wi-Fi 的机器因卸载应用而立刻断网。
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl disable fnos-bcm4360-wl.service >/dev/null 2>&1 || true
+fi
+
+rm -f /etc/systemd/system/fnos-bcm4360-wl.service
+rm -f /usr/local/sbin/fnos-bcm4360-wl
+
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl daemon-reload >/dev/null 2>&1 || true
+fi
+
+exit 0

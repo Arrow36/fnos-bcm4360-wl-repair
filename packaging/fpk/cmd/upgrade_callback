@@ -1,0 +1,15 @@
+#!/bin/bash
+set -Eeuo pipefail
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+LOG_FILE="${TRIM_TEMP_LOGFILE:-/tmp/bcm4360-wl-repair-upgrade.log}"
+APP_DIR="${TRIM_APPDEST:?TRIM_APPDEST 未设置}"
+INSTALLER="${APP_DIR}/bin/fnos-bcm4360-oneclick.sh"
+DRIVER_PACKAGE="${APP_DIR}/packages/broadcom-sta-dkms_6.30.223.271-30_amd64.deb"
+
+if ! /bin/bash "$INSTALLER" install --deb "$DRIVER_PACKAGE" >>"$LOG_FILE" 2>&1; then
+    printf '%s\n' "升级后重新配置 BCM4360 驱动失败；详细信息见升级日志。" >>"$LOG_FILE"
+    exit 1
+fi
+
+exit 0
