@@ -1,0 +1,11 @@
+appname = bcm4360-wl-repair
+version = 1.0.0
+display_name = BCM4360 网卡驱动修复
+desc = 安装并自动维护 Broadcom BCM4360（14e4:43a0）wl 驱动，适用于 x86_64 飞牛 fnOS。
+platform = x86
+source = thirdparty
+category = system
+maintainer = Arrow36
+distributor = Arrow36
+ctl_stop = true
+checkport = false
