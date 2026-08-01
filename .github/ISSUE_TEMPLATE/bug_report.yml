@@ -1,0 +1,45 @@
+name: Bug 报告
+description: 报告安装、构建、驱动加载或开机自愈问题
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: 请先脱敏日志，不要提交密码、令牌、私钥、完整公网 IP 或主机名。
+  - type: input
+    id: fnos-version
+    attributes:
+      label: fnOS 版本
+    validations:
+      required: true
+  - type: input
+    id: kernel-version
+    attributes:
+      label: 内核版本（uname -r）
+    validations:
+      required: true
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: 安装方式
+      options:
+        - FPK 应用中心
+        - 一键脚本联网安装
+        - 一键脚本离线安装
+        - 从源码构建
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述与复现步骤
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 已脱敏的状态和日志
+      render: shell
+    validations:
+      required: true

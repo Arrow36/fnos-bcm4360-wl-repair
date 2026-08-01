@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 安装与故障排查文档
+    url: https://github.com/Arrow36/fnos-bcm4360-wl-repair/blob/main/docs/TROUBLESHOOTING.md
+    about: 提交 Issue 前请先检查常见问题。
