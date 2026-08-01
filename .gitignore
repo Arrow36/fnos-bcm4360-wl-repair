@@ -1,0 +1,21 @@
+# Generated artifacts and caches
+dist/
+.cache/
+__pycache__/
+*.py[cod]
+
+# Binary packages and archives belong in GitHub Releases, not Git history
+*.deb
+*.fpk
+*.zip
+*.tgz
+
+# Legacy local workspace retained for reference only
+outputs/
+work/
+
+# Editors and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
